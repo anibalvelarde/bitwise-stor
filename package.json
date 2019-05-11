@@ -10,5 +10,8 @@
         "npm",
         "package",
         "anibalvelarde"
-    ]
+    ],
+    "devDependencies": {
+        "jest": "^24.8.0"
+    }
 }
