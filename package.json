@@ -1,4 +1,14 @@
 {
     "name": "@aevnpm/bitwise-stor",
-    "version": "0.1.1"
+    "version": "0.1.1",
+    "description": "Compact boolean value manager.",
+    "license": "MIT",
+    "repository": "anibalvelarde/bitwise-stor",
+    "main": "index.js",
+    "keywords": [
+        "bitwise",
+        "npm",
+        "package",
+        "anibalvelarde"
+    ]
 }
