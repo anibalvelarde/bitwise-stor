@@ -9,13 +9,11 @@
 A JavaScript-based library for managing/storing up to 24 Boolean switches within an integer value. 
 
 ## Install
------------------
 ```
 $ npm install @aevnpm/bitwise-stor
 ```
 
 ## Usage
-------------------
 ```js
 const bws = require("@aevnpm/bitwise-stor");
 
