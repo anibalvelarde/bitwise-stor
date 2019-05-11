@@ -33,8 +33,8 @@ bitwiseStore.pack = binaryDigitString => {
  * @returns string
  */
 bitwiseStore.unpack = intValue => {
-  if (intValue > UPPER_LIMIT) return ERR.UPPER_LIMIT_EXCEEDED;
-  if (intValue < 0) return ERR.VALUE_MUST_BE_POSITIVE;
+  if (intValue > UPPER_LIMIT) throw new Error(ERR.UPPER_LIMIT_EXCEEDED);
+  if (intValue < 0) throw new Error(ERR.VALUE_MUST_BE_POSITIVE);
 
   return MASK;
 }
