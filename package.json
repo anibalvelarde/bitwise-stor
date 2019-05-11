@@ -1,17 +1,33 @@
 {
-    "name": "@aevnpm/bitwise-stor",
-    "version": "0.1.1",
-    "description": "Compact boolean value manager.",
-    "license": "MIT",
-    "repository": "anibalvelarde/bitwise-stor",
-    "main": "index.js",
-    "keywords": [
-        "bitwise",
-        "npm",
-        "package",
-        "anibalvelarde"
-    ],
-    "devDependencies": {
-        "jest": "^24.8.0"
-    }
+  "name": "@aevnpm/bitwise-stor",
+  "version": "0.1.1",
+  "description": "Compact boolean value manager.",
+  "main": "index.js",
+  "keywords": [
+    "bitwise",
+    "npm",
+    "package",
+    "anibalvelarde"
+  ],
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Anibal Velarde",
+  "license": "MIT",
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anibalvelarde/bitwise-stor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/anibalvelarde/bitwise-stor/issues"
+  },
+  "devDependencies": {
+    "babel-jest": "^24.8.0",
+    "babel-preset-es2015": "^6.24.1",
+    "eslint": "^5.16.0",
+    "eslint-plugin-jest": "^22.5.1",
+    "jest": "^24.8.0",
+    "jest-css-modules": "^2.0.0"
+  }
 }
