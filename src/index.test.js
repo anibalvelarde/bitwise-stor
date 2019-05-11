@@ -12,4 +12,11 @@ describe('bitwise-stor methods', () => {
       })
     })
   })
+
+  describe('unpack()', () => {
+
+    it('should return all bits OFF when value is zero.', () => {
+      expect(bitwiseStore.unpack(0)).toEqual('000000000000000000000000');
+    })
+  })
 })
