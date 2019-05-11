@@ -9,7 +9,7 @@
  * @since  0.1.1
  */
 
-const bitwiseStore = {};
+const bitwiseStore = {}
 
 /**
  * @function pack
@@ -17,7 +17,9 @@ const bitwiseStore = {};
  * @returns number 
  */
 bitwiseStore.pack = binaryDigitString => {
-    return 0;
+  const input = binaryDigitString;
+
+  return 0
 }
 
-module.exports = bitwiseStore;
+module.exports = bitwiseStore
