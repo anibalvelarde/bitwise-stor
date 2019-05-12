@@ -14,7 +14,9 @@ const ERR = {
   UPPER_LIMIT_EXCEEDED: 'Error! Upper limit exceeded.',
   VALUE_MUST_BE_POSITIVE: 'Error! Value must be positive.',
   VALUE_MUST_BE_STRING: 'Error! Value must be a string.',
-  VALUE_MUST_BE_NUMERIC: 'Error! Value must be a number.'
+  VALUE_MUST_BE_NUMERIC: 'Error! Value must be a number.',
+  VALUE_MUST_BE_ARRAY: 'Error! Value must be an Array.',
+  ARRAY_ELEMENTS_MUST_BE_ZERO_OR_ONE: 'Error! Element of bits array must be zero or 1'
 }
 const bitwiseStore = {}
 
@@ -42,6 +44,18 @@ bitwiseStore.unpack = intValue => {
   if (intValue === 0) return MASK;
 
   return intValue.toString(2);
+}
+
+/**
+ * @function packArray
+ * @param array of numbers: 0's or 1's
+ * @returns number
+ */
+bitwiseStore.packArray = bitArray => {
+  if (!Array.isArray(bitArray)) throw new Error(ERR.VALUE_MUST_BE_ARRAY);
+  if (bitArray.some(i => (i !== 0 && i !== 1))) throw new Error(ERR.ARRAY_ELEMENTS_MUST_BE_ZERO_OR_ONE);
+
+  return bitwiseStore.pack(bitArray.join(''));
 }
 
 module.exports = bitwiseStore

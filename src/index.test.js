@@ -2,6 +2,42 @@ const bitwiseStore = require('./index');
 
 describe('bitwise-stor methods', () => {
 
+  describe('packArray()', () => {
+    const someBitsAreOnAsArray = [
+      { bits: [ 1, 0, 1 ], expAnswer: 5 },
+      { bits: [ 1, 0, 0, 0, 1 ], expAnswer: 17 }
+    ];
+    const badArrayElements = [
+      [ 2, 0, 1 ], [ 'a', 'b', 'c' ], [ 'this', 'is', 'a', 'test' ]
+    ];
+
+    describe('error cases...', () => {
+      const notArrayValues = [ undefined, true, 'some-string', 1231, { some: 'object', with: 'data' } ];
+
+      notArrayValues.forEach(badValue => {
+        it(`should throw when value is not an array [${typeof badValue}]`, () => {
+          expect(() => {
+            bitwiseStore.packArray(badValue);
+          }).toThrow();    
+        });
+      });
+
+      badArrayElements.forEach(badCase => {
+        it('should throw when Array elements do not contain zeroes/ones only', () => {
+          expect(() => {
+            bitwiseStore.packArray(badCase);
+          }).toThrow();
+        });
+      });
+    });
+
+    someBitsAreOnAsArray.forEach(testCase => {
+      it(`should correctly compute value for [${testCase.bits}] should be ${testCase.expAnswer}`, () => {
+        expect(bitwiseStore.packArray(testCase.bits)).toBe(testCase.expAnswer);
+      });
+    });
+  });
+
   describe('pack()', () => {
     const allBitsAreOff = [
       '', '0', '000', '000000000',
@@ -17,6 +53,7 @@ describe('bitwise-stor methods', () => {
     const someBitsAreOn = [
       { bits: '101010101010101010101011', expAnswer: 11184811 }
     ]
+    
     allBitsAreOff.forEach(testCase => {
       it(`should correctly identify all bits off for [${testCase}]`, () => {
         expect(bitwiseStore.pack(testCase)).toEqual(0)
