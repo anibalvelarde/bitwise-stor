@@ -13,9 +13,26 @@ $ npm install @aevnpm/bitwise-stor
 ```
 
 ## Usage
+### Simple cases:
+`pack()` & `unpack()` with primitive value manipulation:
 ```js
 const bws = require("@aevnpm/bitwise-stor");
 
 // get integer value from boolean string 
 const val = bws.pack('101');  // val = 5
+
+// get a binary digit string (right-most-significant) from an integer
+const bits = bws.unpack(val); // bits = '101'
+```
+
+### Array cases:  -- Future Roadmap --
+`packArray()` & `unpackArray()` with, you guessed it, `Array` types
+```js
+const bws = require("@aevnpm/bitwise-stor");
+
+// get integer value from boolean string 
+const val = bws.packArray([1, 0, 1]);  // val = 5
+
+// get a binary digit string (right-most-significant) from an integer
+const bits = bws.unpackArray(val); // bits = [1, 0, 1]
 ```
