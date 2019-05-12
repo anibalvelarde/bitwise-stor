@@ -12,7 +12,9 @@ const UPPER_LIMIT = 16777215;
 const MASK = '000000000000000000000000';
 const ERR = {
   UPPER_LIMIT_EXCEEDED: 'Error! Upper limit exceeded.',
-  VALUE_MUST_BE_POSITIVE: 'Error! Value must be positive.'
+  VALUE_MUST_BE_POSITIVE: 'Error! Value must be positive.',
+  VALUE_MUST_BE_STRING: 'Error! Value must be a string.',
+  VALUE_MUST_BE_NUMERIC: 'Error! Value must be a number.'
 }
 const bitwiseStore = {}
 
@@ -22,9 +24,10 @@ const bitwiseStore = {}
  * @returns number 
  */
 bitwiseStore.pack = binaryDigitString => {
-  const input = binaryDigitString;
+  if (typeof binaryDigitString !== 'string') throw new Error(ERR.VALUE_MUST_BE_STRING);
+  if (binaryDigitString.length === 0) return 0;
 
-  return 0
+  return parseInt(binaryDigitString, 2);
 }
 
 /**
@@ -33,10 +36,12 @@ bitwiseStore.pack = binaryDigitString => {
  * @returns string
  */
 bitwiseStore.unpack = intValue => {
+  if (typeof intValue !== 'number') throw new Error(ERR.VALUE_MUST_BE_NUMERIC);
   if (intValue > UPPER_LIMIT) throw new Error(ERR.UPPER_LIMIT_EXCEEDED);
   if (intValue < 0) throw new Error(ERR.VALUE_MUST_BE_POSITIVE);
+  if (intValue === 0) return MASK;
 
-  return MASK;
+  return intValue.toString(2);
 }
 
 module.exports = bitwiseStore
