@@ -78,4 +78,21 @@ console.log({ packedObject })
 //    bwsPackedPropNames: { ... 64-bit encoding ...},
 //    bwsPackedValue: 17
 //  } 
+
+const unpackedObject = bws.unpackJson(packedObj);
+console.log({ unpackedObject });
+
+// Console:
+//  packedObject: {
+//    name: 'Billy Russo',
+//    age: 38,
+//    cashOnHand: 4500,
+//    isDeceased: false,
+//    heightInMeeters: 1.9,
+//    hasScars: true,
+//    canFeelLove: false,
+//    isHospitalized: false,
+//    isDeceased: false,
+//    hasBankAccount: true
+//  }
 ```
