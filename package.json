@@ -1,6 +1,6 @@
 {
   "name": "@aevnpm/bitwise-stor",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Compact boolean value manager.",
   "main": "index.js",
   "keywords": [
