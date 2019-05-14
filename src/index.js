@@ -16,7 +16,8 @@ const ERR = {
   VALUE_MUST_BE_STRING: 'Error! Value must be a string.',
   VALUE_MUST_BE_NUMERIC: 'Error! Value must be a number.',
   VALUE_MUST_BE_ARRAY: 'Error! Value must be an Array.',
-  ARRAY_ELEMENTS_MUST_BE_ZERO_OR_ONE: 'Error! Element of bits array must be zero or 1'
+  ARRAY_ELEMENTS_MUST_BE_ZERO_OR_ONE: 'Error! Element of bits array must be zero or 1.',
+  ARRAY_ELEMENTS_MUST_BE_BOOLEAN: 'Error! Element of array must be of boolean values.'
 }
 const bitwiseStore = {}
 
@@ -34,7 +35,7 @@ bitwiseStore.pack = binaryDigitString => {
 
 /**
  * @function unpack
- * @param number
+ * @param intValue
  * @returns string
  */
 bitwiseStore.unpack = intValue => {
@@ -47,15 +48,55 @@ bitwiseStore.unpack = intValue => {
 }
 
 /**
- * @function packArray
- * @param array of numbers: 0's or 1's
+ * @function packArrayBits
+ * @param bitArray of numbers: 0's or 1's
  * @returns number
  */
-bitwiseStore.packArray = bitArray => {
+bitwiseStore.packArrayOfBits = bitArray => {
   if (!Array.isArray(bitArray)) throw new Error(ERR.VALUE_MUST_BE_ARRAY);
   if (bitArray.some(i => (i !== 0 && i !== 1))) throw new Error(ERR.ARRAY_ELEMENTS_MUST_BE_ZERO_OR_ONE);
 
   return bitwiseStore.pack(bitArray.join(''));
+}
+
+/**
+ * @function unpackArrayOfBit
+ * @param intValue
+ * @returns Array of 1's and/or 0's
+ */
+bitwiseStore.unpackArrayOfBit = intValue => {
+  const bitString = bitwiseStore.unpack(intValue);
+  return bitString
+    .split('')
+    .map(i => i === '1' ? 1 : 0);
+}
+
+/**
+ * @function packArrayBool
+ * @param boolArray of booleans: true or false
+ * @returns number
+ */
+bitwiseStore.packArrayOfBool = boolArray => {
+  if (!Array.isArray(boolArray)) throw new Error(ERR.VALUE_MUST_BE_ARRAY);
+  if (boolArray.some(i => (typeof i !== 'boolean'))) throw new Error(ERR.ARRAY_ELEMENTS_MUST_BE_BOOLEAN);
+
+  return bitwiseStore.pack(
+    boolArray
+      .map(i => i ? '1' : '0')
+      .join('')
+  );
+}
+
+/**
+ * @function unpackArrayOfBool
+ * @param intValue
+ * @returns Array of boolean values
+ */
+bitwiseStore.unpackArrayOfBool = intValue => {
+  const bitString = bitwiseStore.unpack(intValue);
+  return bitString
+    .split('')
+    .map(i => i === '1' ? true : false);
 }
 
 module.exports = bitwiseStore

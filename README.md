@@ -25,16 +25,16 @@ const val = bws.pack('101');  // val = 5
 const bits = bws.unpack(val); // bits = '101'
 ```
 
-### Array cases:  -- Future Roadmap --
+### Array cases:
 `packArray()` & `unpackArray()` with, you guessed it, `Array` types
 ```js
 const bws = require("@aevnpm/bitwise-stor");
 
 // get integer value from array of bits string 
-const val = bws.packArray([1, 0, 1]);  // val = 5
+const val = bws.packArrayBits([1, 0, 1]);  // val = 5
 
 // get integer value from array of bool values 
-const val2 = bws.packArray([true, false, true]);  // val = 5
+const val2 = bws.packArrayBool([true, false, true]);  // val = 5
 
 // get a binary digit string (right-most-significant) from an integer
 const bits = bws.unpackArrayOfBit(val); // bits = [1, 0, 1]

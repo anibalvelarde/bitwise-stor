@@ -2,7 +2,44 @@ const bitwiseStore = require('./index');
 
 describe('bitwise-stor methods', () => {
 
-  describe('packArray()', () => {
+  describe('packArrayBool()', () => {
+    const someBitsAreOnAsArray = [
+      { bits: [ true, false, true ], expAnswer: 5 },
+      { bits: [ true, false, false, false, true ], expAnswer: 17 }
+    ];
+    const badArrayElements = [
+      [ true, false, 2 ], [ false, 'b', 'c' ], [ true, 'this', 'is', 'a', 'test' ]
+    ];
+
+    describe('error cases...', () => {
+      const notArrayValues = [ undefined, true, 'some-string', 1231, { some: 'object', with: 'data' } ];
+
+      notArrayValues.forEach(badValue => {
+        it(`should throw when value is not an array [${typeof badValue}]`, () => {
+          expect(() => {
+            bitwiseStore.packArrayOfBool(badValue);
+          }).toThrow();    
+        });
+      });
+
+      badArrayElements.forEach(badCase => {
+        it('should throw when Array elements do not contain zeroes/ones only', () => {
+          expect(() => {
+            bitwiseStore.packArrayOfBool(badCase);
+          }).toThrow();
+        });
+      });
+    });
+
+    someBitsAreOnAsArray.forEach(testCase => {
+      it(`should correctly compute value for [${testCase.bits}] should be ${testCase.expAnswer}`, () => {
+        expect(bitwiseStore.packArrayOfBool(testCase.bits)).toBe(testCase.expAnswer);
+      });
+    });
+  });
+
+
+  describe('packArrayBits()', () => {
     const someBitsAreOnAsArray = [
       { bits: [ 1, 0, 1 ], expAnswer: 5 },
       { bits: [ 1, 0, 0, 0, 1 ], expAnswer: 17 }
@@ -17,7 +54,7 @@ describe('bitwise-stor methods', () => {
       notArrayValues.forEach(badValue => {
         it(`should throw when value is not an array [${typeof badValue}]`, () => {
           expect(() => {
-            bitwiseStore.packArray(badValue);
+            bitwiseStore.packArrayOfBits(badValue);
           }).toThrow();    
         });
       });
@@ -25,7 +62,7 @@ describe('bitwise-stor methods', () => {
       badArrayElements.forEach(badCase => {
         it('should throw when Array elements do not contain zeroes/ones only', () => {
           expect(() => {
-            bitwiseStore.packArray(badCase);
+            bitwiseStore.packArrayOfBits(badCase);
           }).toThrow();
         });
       });
@@ -33,7 +70,7 @@ describe('bitwise-stor methods', () => {
 
     someBitsAreOnAsArray.forEach(testCase => {
       it(`should correctly compute value for [${testCase.bits}] should be ${testCase.expAnswer}`, () => {
-        expect(bitwiseStore.packArray(testCase.bits)).toBe(testCase.expAnswer);
+        expect(bitwiseStore.packArrayOfBits(testCase.bits)).toBe(testCase.expAnswer);
       });
     });
   });
@@ -112,5 +149,33 @@ describe('bitwise-stor methods', () => {
     it('should throw when value is not numeric', () => {
       expect(() => bitwiseStore.unpack('abcdefg')).toThrow();
     });
-  })
-})
+  });
+
+  describe('unpackArrayOfBit()', () => {
+    const testCases = [
+      { testValue: 5, expAnswer:  [ 1, 0, 1 ] },
+      { testValue: 17, expAnswer: [ 1, 0, 0, 0, 1 ] }
+    ]
+
+    testCases.forEach(testCase => {
+      it(`should correctly unpack [${testCase.testValue}] to be [${testCase.expAnswer}]`, () => {
+        expect(bitwiseStore.unpackArrayOfBit(testCase.testValue))
+          .toEqual(testCase.expAnswer);
+      });
+    });
+  });
+
+  describe('unpackArrayOfBool()', () => {
+    const testCases = [
+      { testValue: 5, expAnswer:  [ true, false, true ] },
+      { testValue: 17, expAnswer: [ true, false, false, false, true ] }
+    ]
+
+    testCases.forEach(testCase => {
+      it(`should correctly unpack [${testCase.testValue}] to be [${testCase.expAnswer}]`, () => {
+        expect(bitwiseStore.unpackArrayOfBool(testCase.testValue))
+          .toEqual(testCase.expAnswer);
+      });
+    });
+  });
+});
