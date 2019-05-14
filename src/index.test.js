@@ -54,7 +54,7 @@ describe('bitwise-stor methods', () => {
       notArrayValues.forEach(badValue => {
         it(`should throw when value is not an array [${typeof badValue}]`, () => {
           expect(() => {
-            bitwiseStore.packArrayOfBits(badValue);
+            bitwiseStore.packArrayOfBit(badValue);
           }).toThrow();    
         });
       });
@@ -62,7 +62,7 @@ describe('bitwise-stor methods', () => {
       badArrayElements.forEach(badCase => {
         it('should throw when Array elements do not contain zeroes/ones only', () => {
           expect(() => {
-            bitwiseStore.packArrayOfBits(badCase);
+            bitwiseStore.packArrayOfBit(badCase);
           }).toThrow();
         });
       });
@@ -70,7 +70,7 @@ describe('bitwise-stor methods', () => {
 
     someBitsAreOnAsArray.forEach(testCase => {
       it(`should correctly compute value for [${testCase.bits}] should be ${testCase.expAnswer}`, () => {
-        expect(bitwiseStore.packArrayOfBits(testCase.bits)).toBe(testCase.expAnswer);
+        expect(bitwiseStore.packArrayOfBit(testCase.bits)).toBe(testCase.expAnswer);
       });
     });
   });

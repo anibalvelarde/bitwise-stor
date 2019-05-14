@@ -48,11 +48,11 @@ bitwiseStore.unpack = intValue => {
 }
 
 /**
- * @function packArrayBits
+ * @function packArrayBit
  * @param bitArray of numbers: 0's or 1's
  * @returns number
  */
-bitwiseStore.packArrayOfBits = bitArray => {
+bitwiseStore.packArrayOfBit = bitArray => {
   if (!Array.isArray(bitArray)) throw new Error(ERR.VALUE_MUST_BE_ARRAY);
   if (bitArray.some(i => (i !== 0 && i !== 1))) throw new Error(ERR.ARRAY_ELEMENTS_MUST_BE_ZERO_OR_ONE);
 
