@@ -40,3 +40,42 @@ const val2 = bws.packArrayBool([true, false, true]);  // val = 5
 const bits = bws.unpackArrayOfBit(val); // bits = [1, 0, 1]
 const bits = bws.unpackArrayOfBoolean(val); // bits = [true, false, true]
 ```
+
+### Object cases: - Future Roadmap -
+`pack()` & `unpack()` from a JSON object. The following requirements apply:
+- only boolean properties get packed
+- packing is shallow (no deep navigation of the object)
+- only up to 24 values are packed
+- the names of any packed properties are 64-bit encoded under the `bwsPackedPropNames` key
+- the integer value of the packed bits is stored under the `bwsPackedValue` key
+- the first boolean key is the most significant bit when packed
+
+Example:
+```js
+const bws = require("@aevnpm/bitwise-stor");
+const jsonObj = {
+    name: 'Billy Russo',
+    hasScars: true,
+    canFeelLove: false,
+    age: 38,
+    cashOnHand: 4500,
+    isHospitalized: false,
+    isDeceased: false,
+    heightInMeeters: 1.9,
+    hasBankAccount: true
+}
+
+const packedObject = bws.packJson(jsonObj);
+console.log({ packedObject })
+
+// Console:
+//  packedObject: {
+//    name: 'Billy Russo',
+//    age: 38,
+//    cashOnHand: 4500,
+//    isDeceased: false,
+//    heightInMeeters: 1.9,
+//    bwsPackedPropNames: { ... 64-bit encoding ...},
+//    bwsPackedValue: 17
+//  } 
+```
