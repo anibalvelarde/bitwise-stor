@@ -73,7 +73,6 @@ console.log({ packedObject })
 //    name: 'Billy Russo',
 //    age: 38,
 //    cashOnHand: 4500,
-//    isDeceased: false,
 //    heightInMeeters: 1.9,
 //    bwsPackedPropNames: { ... 64-bit encoding ...},
 //    bwsPackedValue: 17
