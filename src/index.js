@@ -10,6 +10,10 @@
  */
 const UPPER_LIMIT = 16777215;
 const MASK = '000000000000000000000000';
+const LABELS = {
+  PROPS: 'bwsPackedPropNames',
+  VALUE: 'bwsPackedValue'
+}
 const ERR = {
   UPPER_LIMIT_EXCEEDED: 'Error! Upper limit exceeded.',
   VALUE_MUST_BE_POSITIVE: 'Error! Value must be positive.',
@@ -17,7 +21,8 @@ const ERR = {
   VALUE_MUST_BE_NUMERIC: 'Error! Value must be a number.',
   VALUE_MUST_BE_ARRAY: 'Error! Value must be an Array.',
   ARRAY_ELEMENTS_MUST_BE_ZERO_OR_ONE: 'Error! Element of bits array must be zero or 1.',
-  ARRAY_ELEMENTS_MUST_BE_BOOLEAN: 'Error! Element of array must be of boolean values.'
+  ARRAY_ELEMENTS_MUST_BE_BOOLEAN: 'Error! Element of array must be of boolean values.',
+  IMPROPERLY_PACKED_OBJECT: 'Error! Improperly packed object.'
 }
 const bitwiseStore = {}
 
@@ -102,7 +107,7 @@ bitwiseStore.unpackArrayOfBool = intValue => {
 /**
  * @function packObject
  * @param jsonObject
- * @returns jsonObject with packed booleans
+ * @returns jsonObject with packed boolean values
  */
 bitwiseStore.packObject = jsonObject => {
   // get the entries
@@ -123,12 +128,31 @@ bitwiseStore.packObject = jsonObject => {
 
   // assemble packed props
   if (accum.hasPackedProps) {
-    accum.newObj['bwsPackedPropNames'] = accum.propNames;
-    accum.newObj['bwsPackedValue'] = bitwiseStore.pack(accum.bitString);  
+    accum.newObj[LABELS.PROPS] = accum.propNames;
+    accum.newObj[LABELS.VALUE] = bitwiseStore.pack(accum.bitString);  
   }
-  
+
   // return result
   return accum.newObj;
+}
+
+/**
+ * @function unpackObject
+ * @param packedJsonObject
+ * @returns jsonObject with unpacked boolean values
+ */
+bitwiseStore.unpackObject = packedJsonObject => {
+  // Check for proper packing
+  const hasProp = Object.keys(packedJsonObject).some(k => k === LABELS.PROPS);
+  const hasVal = Object.keys(packedJsonObject).some(k => k === LABELS.VALUE);
+  if ((hasProp && !hasVal) || (!hasProp && hasVal)) throw new Error(ERR.IMPROPERLY_PACKED_OBJECT); 
+  
+  // Check for proper data types
+  if (typeof packedJsonObject[LABELS.PROPS] !== 'string') throw new Error(ERR.VALUE_MUST_BE_STRING);
+  if (typeof packedJsonObject[LABELS.VALUE] !== 'number') throw new Error(ERR.VALUE_MUST_BE_NUMERIC);
+
+  // Unpack...
+  return packedJsonObject;
 }
 
 module.exports = bitwiseStore

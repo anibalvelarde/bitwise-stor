@@ -38,7 +38,6 @@ describe('bitwise-stor methods', () => {
     });
   });
 
-
   describe('packArrayBits()', () => {
     const someBitsAreOnAsArray = [
       { bits: [ 1, 0, 1 ], expAnswer: 5 },
@@ -198,7 +197,7 @@ describe('bitwise-stor methods', () => {
       heightInMeeters: 1.9,
       bwsPackedPropNames: 'hasBankAccount|isDeceased|isHospitalized|canFeelLove|hasScars|',
       bwsPackedValue: 17
-    }
+    };
 
     it('should correctly pack JSON object with boolean properties', () => {
       expect(bitwiseStore.packObject(testCase))
@@ -211,9 +210,56 @@ describe('bitwise-stor methods', () => {
         age: 38,
         cashOnHand: 4500,
         heightInMeeters: 1.9  
-      }
+      };
       expect(bitwiseStore.packObject(noBools))
         .toEqual(noBools);
+    });
+
+    it('should correctly pack an empty JSON object', () => {
+      const emptyObj = {};
+      expect(bitwiseStore.packObject(emptyObj))
+        .toEqual(emptyObj);
+    });
+
+  });
+
+  describe('unpackObject()', () => {
+    const expectedResult = {
+      name: 'Billy Russo',
+      hasScars: true,
+      canFeelLove: false,
+      age: 38,
+      cashOnHand: 4500,
+      isHospitalized: false,
+      isDeceased: false,
+      heightInMeeters: 1.9,
+      hasBankAccount: true
+    };
+    const testCase = {
+      name: 'Billy Russo',
+      age: 38,
+      cashOnHand: 4500,
+      heightInMeeters: 1.9,
+      bwsPackedPropNames: 'hasBankAccount|isDeceased|isHospitalized|canFeelLove|hasScars|',
+      bwsPackedValue: 17
+    }
+
+    it('should unpack a properly-packed JSON object', () => {
+      expect(bitwiseStore.unpackObject(testCase))
+        .toEqual(expectedResult);
+    });
+
+    const improperlyPackedCases = [
+      { case: { bwsPackedPropNames: '' }, desc: 'missing packed value' },
+      { case: { bwsPackedValue: 17 }, desc: 'missing packed props' },
+      { case: { bwsPackedPropNames: false, bwsPackedValue: 'string' }, desc: 'incorrect types' }
+    ];
+
+    improperlyPackedCases.forEach(improperCase => {
+      it(`should throw when ${improperCase.desc}`, () => {
+        expect(() => bitwiseStore.unpackObject(improperCase.case))
+          .toThrow();
+      });
     });
   });
 });
