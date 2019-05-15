@@ -41,7 +41,7 @@ const bits = bws.unpackArrayOfBit(val); // bits = [1, 0, 1]
 const bits = bws.unpackArrayOfBoolean(val); // bits = [true, false, true]
 ```
 
-### Object cases: - Future Roadmap -
+### Object cases:
 `pack()` & `unpack()` from a JSON object. The following requirements apply:
 - only boolean properties get packed
 - packing is shallow (no deep navigation of the object)
@@ -73,7 +73,6 @@ console.log({ packedObject })
 //    name: 'Billy Russo',
 //    age: 38,
 //    cashOnHand: 4500,
-//    isDeceased: false,
 //    heightInMeeters: 1.9,
 //    bwsPackedPropNames: { ... 64-bit encoding ...},
 //    bwsPackedValue: 17
