@@ -99,4 +99,36 @@ bitwiseStore.unpackArrayOfBool = intValue => {
     .map(i => i === '1' ? true : false);
 }
 
+/**
+ * @function packObject
+ * @param jsonObject
+ * @returns jsonObject with packed booleans
+ */
+bitwiseStore.packObject = jsonObject => {
+  // get the entries
+  const entries = Object.entries(jsonObject);
+
+  // seggregate props
+  let bitString = '', propNames ='', newObj = Object.create(null), hasPackedProps = false;
+  const accum = entries.reduce((acc, nextEntry) => {
+    if (typeof nextEntry[1] === 'boolean') {
+      acc.bitString = `${nextEntry[1] === true ? '1' : '0'}${acc.bitString}`;
+      acc.propNames = `${nextEntry[0]}|${acc.propNames}`;
+      acc.hasPackedProps = true;
+    } else {
+      acc.newObj[nextEntry[0]] = nextEntry[1];
+    }
+    return acc;
+  }, { bitString, propNames, newObj, hasPackedProps })
+
+  // assemble packed props
+  if (accum.hasPackedProps) {
+    accum.newObj['bwsPackedPropNames'] = accum.propNames;
+    accum.newObj['bwsPackedValue'] = bitwiseStore.pack(accum.bitString);  
+  }
+  
+  // return result
+  return accum.newObj;
+}
+
 module.exports = bitwiseStore

@@ -178,4 +178,42 @@ describe('bitwise-stor methods', () => {
       });
     });
   });
+
+  describe('packObject()', () => {
+    const testCase = {
+      name: 'Billy Russo',
+      hasScars: true,
+      canFeelLove: false,
+      age: 38,
+      cashOnHand: 4500,
+      isHospitalized: false,
+      isDeceased: false,
+      heightInMeeters: 1.9,
+      hasBankAccount: true
+    };
+    const expectedResult = {
+      name: 'Billy Russo',
+      age: 38,
+      cashOnHand: 4500,
+      heightInMeeters: 1.9,
+      bwsPackedPropNames: 'hasBankAccount|isDeceased|isHospitalized|canFeelLove|hasScars|',
+      bwsPackedValue: 17
+    }
+
+    it('should correctly pack JSON object with boolean properties', () => {
+      expect(bitwiseStore.packObject(testCase))
+        .toEqual(expectedResult);
+    });
+
+    it('should correctly pack JSON object without boolean properties', () => {
+      const noBools = {
+        name: 'Billy Russo',
+        age: 38,
+        cashOnHand: 4500,
+        heightInMeeters: 1.9  
+      }
+      expect(bitwiseStore.packObject(noBools))
+        .toEqual(noBools);
+    });
+  });
 });
