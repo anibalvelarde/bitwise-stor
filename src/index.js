@@ -170,4 +170,4 @@ bitwiseStore.unpackObject = packedJsonObject => {
   return unpackedJsonObject;
 }
 
-module.exports = bitwiseStore
+module.exports = bitwiseStore;
