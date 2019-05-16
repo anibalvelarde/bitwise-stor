@@ -252,6 +252,7 @@ describe('bitwise-stor methods', () => {
     const improperlyPackedCases = [
       { case: { bwsPackedPropNames: '' }, desc: 'missing packed value' },
       { case: { bwsPackedValue: 17 }, desc: 'missing packed props' },
+      { case: { bwsPackedValue: 16, bwsPackedPropNames: 'p6|p5|p4|p3|p2|p1|' }, desc: 'inconsistent prop to value count' },
       { case: { bwsPackedPropNames: false, bwsPackedValue: 'string' }, desc: 'incorrect types' }
     ];
 

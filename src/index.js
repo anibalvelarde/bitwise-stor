@@ -22,7 +22,8 @@ const ERR = {
   VALUE_MUST_BE_ARRAY: 'Error! Value must be an Array.',
   ARRAY_ELEMENTS_MUST_BE_ZERO_OR_ONE: 'Error! Element of bits array must be zero or 1.',
   ARRAY_ELEMENTS_MUST_BE_BOOLEAN: 'Error! Element of array must be of boolean values.',
-  IMPROPERLY_PACKED_OBJECT: 'Error! Improperly packed object.'
+  IMPROPERLY_PACKED_OBJECT: 'Error! Improperly packed object.',
+  INCONSISTENT_PROP_TO_VALUE_COUNT: 'Error! Inconsistent proerty to values count.'
 }
 const bitwiseStore = {}
 
@@ -152,7 +153,21 @@ bitwiseStore.unpackObject = packedJsonObject => {
   if (typeof packedJsonObject[LABELS.VALUE] !== 'number') throw new Error(ERR.VALUE_MUST_BE_NUMERIC);
 
   // Unpack...
-  return packedJsonObject;
+  const bits = bitwiseStore.unpackArrayOfBool(packedJsonObject[LABELS.VALUE]);
+  const propNames = packedJsonObject[LABELS.PROPS]
+    .split('|')
+    .filter(x =>  ((typeof x === 'string') && (x.length > 0)));
+  if (bits.length !== propNames.length) throw new Error(ERR.INCONSISTENT_PROP_TO_VALUE_COUNT);
+
+  delete packedJsonObject[LABELS.PROPS];
+  delete packedJsonObject[LABELS.VALUE];
+  const unpackedJsonObject = propNames
+    .reduce((pjo, propName, idx) => {
+      pjo[propName] = bits[idx];
+      return pjo;
+    }, packedJsonObject)
+
+  return unpackedJsonObject;
 }
 
-module.exports = bitwiseStore
+module.exports = bitwiseStore;
