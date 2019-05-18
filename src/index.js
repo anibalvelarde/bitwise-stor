@@ -138,6 +138,38 @@ bitwiseStore.packObject = jsonObject => {
 }
 
 /**
+ * @function packObjectBase64
+ * @param jsonObject
+ * @returns jsonObject with packed boolean values and base64 encoded prop names
+ */
+bitwiseStore.packObjectBase64 = jsonObject => {
+  // get the entries
+  const entries = Object.entries(jsonObject);
+
+  // seggregate props
+  let bitString = '', propNames ='', newObj = Object.create(null), hasPackedProps = false;
+  const accum = entries.reduce((acc, nextEntry) => {
+    if (typeof nextEntry[1] === 'boolean') {
+      acc.bitString = `${nextEntry[1] === true ? '1' : '0'}${acc.bitString}`;
+      acc.propNames = `${nextEntry[0]}|${acc.propNames}`;
+      acc.hasPackedProps = true;
+    } else {
+      acc.newObj[nextEntry[0]] = nextEntry[1];
+    }
+    return acc;
+  }, { bitString, propNames, newObj, hasPackedProps })
+
+  // assemble packed props
+  if (accum.hasPackedProps) {
+    accum.newObj[LABELS.PROPS] = btoa(accum.propNames);
+    accum.newObj[LABELS.VALUE] = bitwiseStore.pack(accum.bitString);  
+  }
+
+  // return result
+  return accum.newObj;
+}
+
+/**
  * @function unpackObject
  * @param packedJsonObject
  * @returns jsonObject with unpacked boolean values
@@ -169,5 +201,39 @@ bitwiseStore.unpackObject = packedJsonObject => {
 
   return unpackedJsonObject;
 }
+
+/**
+ * @function unpackObjectBase64
+ * @param packedJsonObject
+ * @returns jsonObject with unpacked boolean values
+ */
+bitwiseStore.unpackObjectBase64 = packedBase64JsonObject => {
+  // Check for proper packing
+  const hasProp = Object.keys(packedBase64JsonObject).some(k => k === LABELS.PROPS);
+  const hasVal = Object.keys(packedBase64JsonObject).some(k => k === LABELS.VALUE);
+  if ((hasProp && !hasVal) || (!hasProp && hasVal)) throw new Error(ERR.IMPROPERLY_PACKED_OBJECT); 
+  
+  // Check for proper data types
+  if (typeof packedBase64JsonObject[LABELS.PROPS] !== 'string') throw new Error(ERR.VALUE_MUST_BE_STRING);
+  if (typeof packedBase64JsonObject[LABELS.VALUE] !== 'number') throw new Error(ERR.VALUE_MUST_BE_NUMERIC);
+
+  // Unpack...
+  const bits = bitwiseStore.unpackArrayOfBool(packedBase64JsonObject[LABELS.VALUE]);
+  const propNames = atob(packedBase64JsonObject[LABELS.PROPS])
+    .split('|')
+    .filter(x =>  ((typeof x === 'string') && (x.length > 0)));
+  if (bits.length !== propNames.length) throw new Error(ERR.INCONSISTENT_PROP_TO_VALUE_COUNT);
+
+  delete packedBase64JsonObject[LABELS.PROPS];
+  delete packedBase64JsonObject[LABELS.VALUE];
+  const unpackedBase64JsonObject = propNames
+    .reduce((pjo, propName, idx) => {
+      pjo[propName] = bits[idx];
+      return pjo;
+    }, packedBase64JsonObject)
+
+  return unpackedBase64JsonObject;
+}
+
 
 module.exports = bitwiseStore;

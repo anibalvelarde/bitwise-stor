@@ -263,4 +263,91 @@ describe('bitwise-stor methods', () => {
       });
     });
   });
+
+  describe('packObjectBase64()', () => {
+    const testCase = {
+      name: 'Billy Russo',
+      hasScars: true,
+      canFeelLove: false,
+      age: 38,
+      cashOnHand: 4500,
+      isHospitalized: false,
+      isDeceased: false,
+      heightInMeeters: 1.9,
+      hasBankAccount: true
+    };
+    const expectedResult = {
+      name: 'Billy Russo',
+      age: 38,
+      cashOnHand: 4500,
+      heightInMeeters: 1.9,
+      bwsPackedPropNames: btoa('hasBankAccount|isDeceased|isHospitalized|canFeelLove|hasScars|'),
+      bwsPackedValue: 17
+    };
+
+    it('should correctly pack JSON object with boolean properties base64-encoded', () => {
+      expect(bitwiseStore.packObjectBase64(testCase))
+        .toEqual(expectedResult);
+    });
+
+    it('should correctly pack JSON object without boolean properties', () => {
+      const noBools = {
+        name: 'Billy Russo',
+        age: 38,
+        cashOnHand: 4500,
+        heightInMeeters: 1.9  
+      };
+      expect(bitwiseStore.packObjectBase64(noBools))
+        .toEqual(noBools);
+    });
+
+    it('should correctly pack an empty JSON object', () => {
+      const emptyObj = {};
+      expect(bitwiseStore.packObjectBase64(emptyObj))
+        .toEqual(emptyObj);
+    });
+
+  });
+
+  describe('unpackObjectBase64()', () => {
+    const expectedResult = {
+      name: 'Billy Russo',
+      hasScars: true,
+      canFeelLove: false,
+      age: 38,
+      cashOnHand: 4500,
+      isHospitalized: false,
+      isDeceased: false,
+      heightInMeeters: 1.9,
+      hasBankAccount: true
+    };
+    const testCase = {
+      name: 'Billy Russo',
+      age: 38,
+      cashOnHand: 4500,
+      heightInMeeters: 1.9,
+      bwsPackedPropNames: btoa('hasBankAccount|isDeceased|isHospitalized|canFeelLove|hasScars|'),
+      bwsPackedValue: 17
+    }
+
+    it('should unpack a properly-packed, base64-encoded JSON object', () => {
+      expect(bitwiseStore.unpackObjectBase64(testCase))
+        .toEqual(expectedResult);
+    });
+
+    const improperlyPackedCases = [
+      { case: { bwsPackedPropNames: '' }, desc: 'missing packed value' },
+      { case: { bwsPackedValue: 17 }, desc: 'missing packed props' },
+      { case: { bwsPackedValue: 16, bwsPackedPropNames: 'p6|p5|p4|p3|p2|p1|' }, desc: 'inconsistent prop to value count' },
+      { case: { bwsPackedPropNames: false, bwsPackedValue: 'string' }, desc: 'incorrect types' }
+    ];
+
+    improperlyPackedCases.forEach(improperCase => {
+      it(`should throw when ${improperCase.desc}`, () => {
+        expect(() => bitwiseStore.unpackObjectBase64(improperCase.case))
+          .toThrow();
+      });
+    });
+  });
+
 });
